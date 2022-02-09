@@ -8,6 +8,7 @@
 
 #include "database.h"
 #include "gui.h"
+#include "player.h"
 #include "version.h"
 
 int main(int argc, char *argv[]) {
@@ -18,7 +19,10 @@ int main(int argc, char *argv[]) {
     
     QApplication app(argc, argv);
 
-    initDatabases();
+    // initDatabases();
+
+    Player player("Elizabeth");
+    player.levelUp();
 
     QWidget window;
 
