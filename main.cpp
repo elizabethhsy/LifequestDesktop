@@ -1,8 +1,9 @@
 #include <iostream>
 #include <QApplication>
-#include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QWidget>
+#include <string>
+
+#include "database.h"
 #include "version.h"
 
 int main(int argc, char *argv[]) {
@@ -12,20 +13,21 @@ int main(int argc, char *argv[]) {
 
     QWidget window;
 
-    window.resize(1000, 500);
+    window.resize(1000, 600);
     window.setWindowTitle("Lifequest");
-    window.show();
 
-    QString path = "path";
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(path);
-    db.open();
+    initDatabases();
+
     QSqlQuery query;
-    query.exec("create table person "
-            "(id integer primary key, "
-            "firstname varchar(20), "
-            "lastname varchar(30), "
-            "age integer)");
+    
+    addPlayer("Elizabeth");
+
+    if (query.next()) {
+        QString firstname = query.value(0).toString();
+        qDebug() << "Firstname: " << firstname;
+    }
+
+    window.show();
 
     return app.exec();
 }

@@ -29,6 +29,7 @@ endif()
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
 
 add_executable(LifequestDesktop
+    database.cpp
     main.cpp
     version.cpp
 )
