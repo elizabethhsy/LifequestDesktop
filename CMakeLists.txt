@@ -18,9 +18,6 @@ if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
-# add_executable(LifequestDesktop main.cpp)
-# add_executable(LifequestDesktopTests version.cpp)
-
 if(APPLE)
     list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5/")
     # or list(APPEND CMAKE_PREFIX_PATH "/home/someuser/Qt/5.15.1/clang_64")
@@ -30,6 +27,7 @@ find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
 
 add_executable(LifequestDesktop
     database.cpp
+    gui.cpp
     main.cpp
     version.cpp
 )

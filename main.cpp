@@ -1,31 +1,32 @@
 #include <iostream>
 #include <QApplication>
+#include <QLabel>
+#include <QSqlQuery>
+#include <QTextEdit>
 #include <QWidget>
 #include <string>
 
 #include "database.h"
+#include "gui.h"
 #include "version.h"
 
 int main(int argc, char *argv[]) {
+    int width = 1000;
+    int height = 600;
+
     testVersion();
     
     QApplication app(argc, argv);
 
-    QWidget window;
-
-    window.resize(1000, 600);
-    window.setWindowTitle("Lifequest");
-
     initDatabases();
 
-    QSqlQuery query;
-    
-    addPlayer("Elizabeth");
+    QWidget window;
 
-    if (query.next()) {
-        QString firstname = query.value(0).toString();
-        qDebug() << "Firstname: " << firstname;
-    }
+    window.resize(width, height);
+    window.setWindowTitle("Lifequest");
+
+    QLabel label("label", &window);
+    label.setGeometry(0.1*width, 0.1*height, 100, 100);
 
     window.show();
 
