@@ -1,0 +1,7 @@
+QLabel#title {
+    font-size: 30pt;
+}
+
+QLabel#subtitle {
+    font-size: 15pt;
+}

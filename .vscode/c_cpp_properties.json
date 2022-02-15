@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/local/Cellar/gcc/10.2.0_1/include/c++/10.2.0",
-                "/usr/local/Cellar/qt@5/5.15.2_1/"
+                "/usr/local/Cellar/qt@5/5.15.2_1/",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include"
             ],
             "defines": [],
             "macFrameworkPath": [],

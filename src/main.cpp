@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QApplication>
+#include <QFile>
 #include <QLabel>
 #include <QSqlQuery>
 #include <QTextEdit>
@@ -9,30 +10,49 @@
 #include "database.h"
 #include "gui.h"
 #include "player.h"
+#include "quest.h"
 #include "version.h"
 
 int main(int argc, char *argv[]) {
-    int width = 1000;
-    int height = 600;
-
-    testVersion();
+    // testVersion();
     
     QApplication app(argc, argv);
 
-    // initDatabases();
+    // Load style
+    QFile styleFile( "../style.qss" );
+    styleFile.open( QFile::ReadOnly );
+    QString style( styleFile.readAll() );
+    app.setStyleSheet( style );
 
-    Player player("Elizabeth");
+    initDatabases();
+
+    bool playerExists = checkTable("player"); // only allow a single entry in player table
+    // std::cout << exists << "\n";
+
+    initTables();
+
+    MainWindow mainwindow;
+
+    std::string title = "test questchain";
+    std::string description = "this is a test questchain";
+    QuestChain questChain;
+    // QuestChain questChain(title, description);
+
+    Player player;
+
+    if (playerExists == false) {
+        std::string name = mainwindow.registerPlayer();
+        player = Player(name);
+    }
+    else {
+        player = Player(1); // get first entry in database
+    }
+
+    std::cout << "Player name: " << player.name << "\n";
+
+    mainwindow.playerProfile(player);
     player.levelUp();
-
-    QWidget window;
-
-    window.resize(width, height);
-    window.setWindowTitle("Lifequest");
-
-    QLabel label("label", &window);
-    label.setGeometry(0.1*width, 0.1*height, 100, 100);
-
-    window.show();
+    mainwindow.updateGUI(player);
 
     return app.exec();
 }
