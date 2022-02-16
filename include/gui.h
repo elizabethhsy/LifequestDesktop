@@ -12,6 +12,8 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QTabWidget>
 #include <QWidget>
 
 #include "player.h"

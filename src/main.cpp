@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QApplication>
 #include <QFile>
+#include <QIODevice>
 #include <QLabel>
 #include <QSqlQuery>
 #include <QTextEdit>
@@ -13,15 +14,19 @@
 #include "quest.h"
 #include "version.h"
 
+std::vector<QuestChain> questChains;
+std::vector<Quest> quests;
+
 int main(int argc, char *argv[]) {
     // testVersion();
     
     QApplication app(argc, argv);
 
     // Load style
-    QFile styleFile( "../style.qss" );
-    styleFile.open( QFile::ReadOnly );
+    QFile styleFile( "/Users/Sinon/Dev/LifequestDesktop/style.qss" );
+    styleFile.open( QIODevice::ReadOnly | QIODevice::Text );
     QString style( styleFile.readAll() );
+    styleFile.close();
     app.setStyleSheet( style );
 
     initDatabases();
@@ -31,12 +36,21 @@ int main(int argc, char *argv[]) {
 
     initTables();
 
+    // create objects from databases
+    std::cout << "creating objects from databases" << "\n";
+    questChains = createQuestChains();
+    quests = createQuests();
+    std::cout << "finished creating objects from databases" << "\n";
+
     MainWindow mainwindow;
 
-    std::string title = "test questchain";
-    std::string description = "this is a test questchain";
-    QuestChain questChain;
+    // std::string title = "test questchain";
+    // std::string description = "this is a test questchain";
     // QuestChain questChain(title, description);
+
+    // std::string questTitle = "test quest";
+    // std::string questDescription = "this is a test quest.";
+    // Quest quest(questChain, questTitle, questDescription);
 
     Player player;
 
@@ -45,13 +59,15 @@ int main(int argc, char *argv[]) {
         player = Player(name);
     }
     else {
-        player = Player(1); // get first entry in database
+        player = Player(1); // get first entry in database (replace with login system)
     }
 
     std::cout << "Player name: " << player.name << "\n";
 
     mainwindow.playerProfile(player);
-    player.levelUp();
+    // player.levelUp();
+    // QuestChain questChain = questChains.at(1);
+    // player.acceptQuestChain(questChain);
     mainwindow.updateGUI(player);
 
     return app.exec();

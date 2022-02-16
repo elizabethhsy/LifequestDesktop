@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "quest.h"
@@ -18,8 +19,6 @@ class Player {
         int wisdom = 1;
         int willpower = 1;
         int fame = 0;
-
-        std::vector<QuestChain> questChains;
 
         // constructors
         Player() = default;

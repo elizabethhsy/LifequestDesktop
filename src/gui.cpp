@@ -59,6 +59,61 @@ void MainWindow::playerProfile(Player player) {
     fame->setText("Fame: " + QString::number(player.fame));
     fame->setObjectName("stat");
 
+    // subtabs
+    QTabWidget *playerTabs = new QTabWidget(this);
+
+    // quest subtab
+    QScrollArea *questScroll = new QScrollArea(this);
+    QWidget *questTab = new QWidget(this);
+    QVBoxLayout *questLayout = new QVBoxLayout(questTab);
+
+    QLabel *questLabel = new QLabel(this);
+    questLabel->setText("Quest Label");
+
+    questLayout->addWidget(questLabel);
+
+    QSqlQuery query;
+    query.exec("SELECT * from accept_questchain WHERE player_id = " + toQString(player.id));
+    while (query.next()) {
+        int questChainId = query.value(2).toInt();
+        int currentQuestIndex = query.value(3).toInt();
+        // std::cout << "quest chain id: " << questChainId << "\n";
+
+        QuestChain questChain = questChains.at(questChainId-1);
+
+        // QuestChain questChain(questChainId);
+
+        QLabel *questTitle = new QLabel(this);
+        QString questChainTitle = toTrimmedQString(questChain.title);
+        questTitle->setText(questChainTitle);
+        
+        QLabel *questDescription = new QLabel(this);
+        QString questChainDescription = toTrimmedQString(questChain.description);
+        questDescription->setText(questChainDescription);
+
+        questLayout->addWidget(questTitle);
+        questLayout->addWidget(questDescription);
+
+        questLayout->addStretch();
+    }
+
+    // skills subtab
+    QScrollArea *skillScroll = new QScrollArea(this);
+    QWidget *skillTab = new QWidget(this);
+    QVBoxLayout *skillLayout = new QVBoxLayout(skillTab);
+
+    QLabel *skillLabel = new QLabel(this);
+    skillLabel->setText("Skill Label");
+
+    skillLayout->addWidget(skillLabel);
+    skillLayout->addStretch();
+
+    questScroll->setWidget(questTab);
+    skillScroll->setWidget(skillTab);
+    playerTabs->addTab(questScroll, "Quest");
+    playerTabs->addTab(skillScroll, "Skills");
+
+    // add the widgets to the window
     layout->addWidget(playerName);
     layout->addWidget(level);
     layout->addWidget(strength);
@@ -71,6 +126,8 @@ void MainWindow::playerProfile(Player player) {
         std::cout << player.fame << "\n";
         layout->addWidget(fame); // only display if stat is unlocked
     }
+
+    layout->addWidget(playerTabs);
     layout->addStretch();
     this->show();
 }
@@ -103,10 +160,6 @@ std::string MainWindow::registerPlayer() {
     QObject::connect(button, &QPushButton::clicked, &loop, &QEventLoop::quit);
     QObject::connect(inputBox, &QLineEdit::returnPressed, [&name, inputBox](){
         name = inputBox->text().toStdString();
-        // std::cout << name << "\n";
-
-        // Player player(name); // creates player with the name
-        // std::cout << "function called" << "\n";
     });
     QObject::connect(button, &QPushButton::clicked, [&name, inputBox]() {
         name = inputBox->text().toStdString();

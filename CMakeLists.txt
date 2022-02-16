@@ -18,8 +18,9 @@ enable_testing()
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(QT_VERSION 5)
-set(REQUIRED_LIBS Sql Widgets)
+set(REQUIRED_LIBS Core Sql Widgets)
 set(REQUIRED_LIBS_QUALIFIED Qt5::Core)
 
 if(CMAKE_VERSION VERSION_LESS "3.7.0")
@@ -38,6 +39,7 @@ file(GLOB all_SRCS
         "${PROJECT_SOURCE_DIR}/include/*.hpp"
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
         "${PROJECT_SOURCE_DIR}/src/*.c"
+        "${PROJECT_SOURCE_DIR}/*.qss"
 )
 
 add_executable(LifequestDesktop ${all_SRCS})

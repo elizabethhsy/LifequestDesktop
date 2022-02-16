@@ -5,3 +5,7 @@ QLabel#title {
 QLabel#subtitle {
     font-size: 15pt;
 }
+
+QTabWidget::tab-bar {
+    left: 0; 
+}

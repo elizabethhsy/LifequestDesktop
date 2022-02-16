@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <vector>
 
 int addPlayer(std::string name);
 int initDatabases();
@@ -12,7 +13,9 @@ int initTables();
 
 bool checkTable(std::string name);
 
-QString quotesql( const std::string& s );
-QString quotesql( const int& s );
+QString toQString( const std::string& s );
+QString toQString( const int& s );
+QString toTrimmedQString (const std::string& s);
+QString toTrimmedQString (const int& i);
 
 #endif
