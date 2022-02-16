@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QApplication>
 #include <QFile>
+#include <QFontDatabase>
 #include <QIODevice>
 #include <QLabel>
 #include <QSqlQuery>
@@ -19,8 +20,14 @@ std::vector<Quest> quests;
 
 int main(int argc, char *argv[]) {
     // testVersion();
-    
+        
     QApplication app(argc, argv);
+
+    std::cout << "loading fonts" << "\n";
+    QFontDatabase fontdb;
+    int fontId = QFontDatabase::addApplicationFont("/Users/Sinon/Dev/LifequestDesktop/fonts/BebasNeue.otf");
+    // std::cout << fontId << "\n";
+    std::cout << "finished loading fonts" << "\n";
 
     // Load style
     QFile styleFile( "/Users/Sinon/Dev/LifequestDesktop/style.qss" );
@@ -48,9 +55,10 @@ int main(int argc, char *argv[]) {
     // std::string description = "this is a test questchain";
     // QuestChain questChain(title, description);
 
+    // int questChainIndex = 1;
     // std::string questTitle = "test quest";
     // std::string questDescription = "this is a test quest.";
-    // Quest quest(questChain, questTitle, questDescription);
+    // Quest quest(questChain, questChainIndex, questTitle, questDescription);
 
     Player player;
 
@@ -66,8 +74,8 @@ int main(int argc, char *argv[]) {
 
     mainwindow.playerProfile(player);
     // player.levelUp();
-    // QuestChain questChain = questChains.at(1);
-    // player.acceptQuestChain(questChain);
+    QuestChain questChain = questChains.at(0);
+    player.acceptQuestChain(questChain);
     mainwindow.updateGUI(player);
 
     return app.exec();

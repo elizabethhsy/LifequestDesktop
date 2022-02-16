@@ -1,9 +1,16 @@
 QLabel#title {
-    font-size: 30pt;
+    font-size: 35pt;
+    font-family: "Bebas Neue";
 }
 
 QLabel#subtitle {
     font-size: 15pt;
+}
+
+QLabel#header {
+    font-size: 25pt;
+    /* letter-spacing: 1px; */
+    font-family: "Bebas Neue";
 }
 
 QTabWidget::tab-bar {

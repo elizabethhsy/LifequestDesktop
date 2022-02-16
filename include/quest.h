@@ -1,13 +1,20 @@
 #ifndef QUEST_H
 #define QUEST_H
 
+#include <vector>
+
 #include "database.h"
+
+class Quest;
 
 class QuestChain {
     public:
         int id;
+
         std::string title;
         std::string description;
+        
+        std::vector<int> childQuests; // stores database_id of child quests
 
         // constructors
         QuestChain() = default;
@@ -22,6 +29,8 @@ class QuestChain {
 class Quest {
     public:
         int id;
+        int questChainIndex;
+
         std::string title;
         std::string description;
 
@@ -29,7 +38,7 @@ class Quest {
         Quest *previousQuest; // pointer due to forward declaration
 
         // constructors
-        Quest(QuestChain &parentQuestChain, std::string &title, std::string &description);
+        Quest(QuestChain &parentQuestChain, int &questChainIndex, std::string &title, std::string &description);
         Quest(const int& database_id);
 
         // class methods

@@ -67,10 +67,9 @@ void MainWindow::playerProfile(Player player) {
     QWidget *questTab = new QWidget(this);
     QVBoxLayout *questLayout = new QVBoxLayout(questTab);
 
-    QLabel *questLabel = new QLabel(this);
-    questLabel->setText("Quest Label");
-
-    questLayout->addWidget(questLabel);
+    // QLabel *questLabel = new QLabel(this);
+    // questLabel->setText("Quest Label");
+    // questLayout->addWidget(questLabel);
 
     QSqlQuery query;
     query.exec("SELECT * from accept_questchain WHERE player_id = " + toQString(player.id));
@@ -81,15 +80,16 @@ void MainWindow::playerProfile(Player player) {
 
         QuestChain questChain = questChains.at(questChainId-1);
 
-        // QuestChain questChain(questChainId);
-
         QLabel *questTitle = new QLabel(this);
-        QString questChainTitle = toTrimmedQString(questChain.title);
+        Quest currentQuest = quests.at(questChain.childQuests.at(currentQuestIndex-1)-1);
+        // std::cout << "current quest title: " << currentQuest.title << "\n";
+        std::string title = questChain.title + ": " + currentQuest.title + " [" + std::to_string(currentQuest.questChainIndex) + "/" + std::to_string(questChain.childQuests.size()) + "]";
+        QString questChainTitle = toTrimmedQString(title);
         questTitle->setText(questChainTitle);
+        questTitle->setObjectName("header");
         
         QLabel *questDescription = new QLabel(this);
-        QString questChainDescription = toTrimmedQString(questChain.description);
-        questDescription->setText(questChainDescription);
+        questDescription->setText(toTrimmedQString(currentQuest.description));
 
         questLayout->addWidget(questTitle);
         questLayout->addWidget(questDescription);
@@ -102,10 +102,10 @@ void MainWindow::playerProfile(Player player) {
     QWidget *skillTab = new QWidget(this);
     QVBoxLayout *skillLayout = new QVBoxLayout(skillTab);
 
-    QLabel *skillLabel = new QLabel(this);
-    skillLabel->setText("Skill Label");
+    // QLabel *skillLabel = new QLabel(this);
+    // skillLabel->setText("Skill Label");
+    // skillLayout->addWidget(skillLabel);
 
-    skillLayout->addWidget(skillLabel);
     skillLayout->addStretch();
 
     questScroll->setWidget(questTab);

@@ -33,8 +33,17 @@ Player::Player(const int& database_id) {
 }
 
 void Player::acceptQuestChain(QuestChain& questChain) {
+    // std::cout << "accepting quest chain" << "\n";
     QSqlQuery query;
-    query.exec("INSERT INTO accept_questchain (player_id, questchain_id, quest_index) VALUES (" + toQString(id) + "," + toQString(questChain.id) + ",1);"); // create row in database
+    query.exec("SELECT COUNT(*) FROM accept_questchain WHERE (player_id, questchain_id) = (" + toQString(id) + "," + toQString(questChain.id) + ");");
+    if (query.next()) {
+        // std::cout << "analysing query" << "\n";
+        int count = query.value(0).toInt();
+        // std::cout << "count: " << count << "\n";
+        if (count == 0) {
+            query.exec("INSERT INTO accept_questchain (player_id, questchain_id, quest_index) VALUES (" + toQString(id) + "," + toQString(questChain.id) + ",1);"); // create row in database
+        }
+    }
 }
 
 void Player::levelUp() {

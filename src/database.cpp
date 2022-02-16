@@ -38,7 +38,7 @@ int initTables() {
     QSqlQuery query;
     query.exec("CREATE TABLE player (id integer primary key, name varchar(64), level integer, experience integer, strength integer, agility integer, vitality integer, intelligence integer, wisdom integer, willpower integer, fame integer);");
     query.exec("CREATE TABLE questchain (id integer primary key, title varchar(200), description text);");
-    query.exec("CREATE TABLE quest (id integer primary key, questchain_id integer, title varchar(200), description text);");
+    query.exec("CREATE TABLE quest (id integer primary key, questchain_id integer, questchain_index integer, title varchar(200), description text);");
     query.exec("CREATE TABLE accept_questchain (id integer primary key, player_id integer, questchain_id integer, quest_index integer);");
 
     return 0;

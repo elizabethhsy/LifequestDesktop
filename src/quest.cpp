@@ -15,11 +15,19 @@ QuestChain::QuestChain(const std::string& t, const std::string& d) {
 
 QuestChain::QuestChain(const int& database_id) {
     QSqlQuery query;
+    QSqlQuery query2;
     query.exec("SELECT * from questchain WHERE id = " + toQString(database_id));
     while (query.next()) {
         id = database_id;
         title = query.value(1).toString().toStdString();
         description = query.value(2).toString().toStdString();
+        query2.exec("SELECT * from quest WHERE questchain_id = " + toQString(database_id));
+        while (query2.next()) {
+            auto itPos = childQuests.begin() + query2.value(2).toInt()-1;
+            // std::cout << "getting quest at index: " << query2.value(0).toInt()-1 << "\n";
+            // Quest quest = quests.at(query2.value(0).toInt()-1);
+            childQuests.insert(itPos, query2.value(0).toInt()); // insert at quest index
+        }
         // std::cout << "description: " << description << "\n";
         // qDebug() << query.value(1).toString();
     }
@@ -52,20 +60,22 @@ std::vector<QuestChain> createQuestChains() {
         }
     }
 
-    // std::cout << "number of quest chains: " << questChains.size() << "\n";
+    std::cout << "number of quest chains: " << questChains.size() << "\n";
 
     return questChains;
 }
 
-Quest::Quest(QuestChain &parentQuestChain, std::string &title, std::string &description) {
+Quest::Quest(QuestChain &parentQuestChain, int &questChainIndex, std::string &title, std::string &description) {
     parentQuestChain = parentQuestChain;
+    questChainIndex = questChainIndex;
+    // std::cout << "assigning quest chain index: " << questChainIndex << "\n";
     title = title;
     description = description;
 
     int questChainId = parentQuestChain.returnId();
 
     QSqlQuery query;
-    query.exec("INSERT INTO quest (questchain_id, title, description) VALUES (" + toQString(questChainId) + "," + toQString(title) + "," + toQString(description) + ");"); // create row in database
+    query.exec("INSERT INTO quest (questchain_id, questchain_index, title, description) VALUES (" + toQString(questChainId) + "," + toQString(questChainIndex) + "," + toQString(title) + "," + toQString(description) + ");"); // create row in database
     id = query.lastInsertId().toInt();
     save();
 
@@ -74,23 +84,34 @@ Quest::Quest(QuestChain &parentQuestChain, std::string &title, std::string &desc
 
 Quest::Quest(const int& database_id) {
     QSqlQuery query;
+    QSqlQuery query2;
     query.exec("SELECT * from quest WHERE id = " + toQString(database_id));
-    while (query.next()) {
+    if (query.next()) {
         id = database_id;
-        title = query.value(1).toString().toStdString();
-        description = query.value(2).toString().toStdString();
+        int questChainId = query.value(1).toInt();
+        // std::cout << "quest chain id: " << questChainId << "\n";
+        query2.exec("SELECT * from questchain WHERE id = " + toQString(questChainId));
+        if (query2.next()) {
+            parentQuestChain = questChains.at(questChainId-1);
+        }
+        questChainIndex = query.value(2).toInt();
+        title = query.value(3).toString().toStdString();
+        description = query.value(4).toString().toStdString();
         // std::cout << "description: " << description << "\n";
         // qDebug() << query.value(1).toString();
     }
 
-    quests.push_back(*this); // push itself back onto questChains
+    quests.push_back(*this); // push itself back onto quests
 }
 
 void Quest::save() {
     int questChainId = parentQuestChain.returnId();
 
+    // std::cout << "quest chain index: " << questChainIndex << "\n";
+
     QSqlQuery query;
     query.exec("UPDATE questchain SET questchain_id = " + toQString(questChainId)
+    + ",questchain_index = " + toQString(questChainIndex)
     + ",title = " + toQString(title)
     + ",description = " + toQString(description)
     + " WHERE id = " + toQString(id));
@@ -109,7 +130,7 @@ std::vector<Quest> createQuests() {
         }
     }
 
-    // std::cout << "number of quests: " << quests.size() << "\n";
+    std::cout << "number of quests: " << quests.size() << "\n";
 
     return quests;
 }
